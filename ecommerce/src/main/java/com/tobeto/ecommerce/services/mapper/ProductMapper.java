@@ -1,10 +1,12 @@
 package com.tobeto.ecommerce.services.mapper;
 
 import com.tobeto.ecommerce.entities.Product;
-import com.tobeto.ecommerce.services.dtos.requests.Product.AddProductRequest;
-import com.tobeto.ecommerce.services.dtos.responses.Product.AddProductResponse;
-import com.tobeto.ecommerce.services.dtos.responses.Product.GetByIdProductResponse;
-import com.tobeto.ecommerce.services.dtos.responses.Product.ListProductResponse;
+import com.tobeto.ecommerce.services.dtos.requests.product.AddProductRequest;
+import com.tobeto.ecommerce.services.dtos.requests.product.UpdateProductRequest;
+import com.tobeto.ecommerce.services.dtos.responses.product.AddProductResponse;
+import com.tobeto.ecommerce.services.dtos.responses.product.GetByIdProductResponse;
+import com.tobeto.ecommerce.services.dtos.responses.product.ListProductResponse;
+import com.tobeto.ecommerce.services.dtos.responses.product.UpdateProductResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -20,6 +22,11 @@ public interface ProductMapper {
     ListProductResponse toProductListingResponse(Product response);
     @Mapping(target = "categoryName",source = "category.name")
     GetByIdProductResponse toProductGetByIdResponse(Product response);
+    @Mapping(target = "category.id",source = "categoryId")
+    Product productFromUpdateProductRequest(UpdateProductRequest request);
+    @Mapping(target = "categoryName",source = "category.name")
+    UpdateProductResponse updateProductResponsetoProduct(Product product);
+
 
 //    @Named("mapContactIdsToImages")
 //    default ArrayList<Image> mapContactIdsToImages(List<Integer> imageId) {

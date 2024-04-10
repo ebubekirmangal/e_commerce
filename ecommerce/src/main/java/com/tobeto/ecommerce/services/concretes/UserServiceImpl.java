@@ -1,5 +1,6 @@
 package com.tobeto.ecommerce.services.concretes;
 
+import com.tobeto.ecommerce.core.utils.exceptions.types.BusinessException;
 import com.tobeto.ecommerce.entities.User;
 import com.tobeto.ecommerce.repositories.UserRepository;
 import com.tobeto.ecommerce.services.abstracts.UserService;
@@ -12,6 +13,7 @@ import com.tobeto.ecommerce.services.mapper.UserMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -36,12 +38,23 @@ public class UserServiceImpl implements UserService {
     @Override
     public UpdateUserResponse update(UpdateUserRequest request) {
 
-        return null;
+        User user = UserMapper.INSTANCE.userFromUpdateUserRequest(request);
+        User updated = userRepository.save(user);
+
+        UpdateUserResponse response = UserMapper.INSTANCE.UptadeResponseToUser(updated);
+
+        return response;
     }
 
     @Override
     public DeleteUserResponse delete(DeleteUserRequest request) {
-        return null;
+
+        User userBeDelete = userRepository.findById(request.getId()).orElseThrow(()-> new BusinessException("Bu id'de tanımlı kullanıcı bulunamadı."));
+
+        userRepository.delete(userBeDelete);
+
+        DeleteUserResponse response = UserMapper.INSTANCE.DeleteResponseToUser(userBeDelete);
+        return response;
     }
 
     @Override
@@ -54,6 +67,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public GetByIdUserResponse getById(GetByIdUserRequest request) {
-        return null;
+        User findUser = userRepository.findById(request.getId()).orElseThrow(() -> new BusinessException("id'e tanımlı kullanıcı bulunamadı."));
+
+        GetByIdUserResponse response = UserMapper.INSTANCE.GetByIdResponseToUser(findUser);
+
+
+        return response;
     }
 }

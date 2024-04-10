@@ -1,4 +1,4 @@
-package com.tobeto.ecommerce.services.dtos.requests.Product;
+package com.tobeto.ecommerce.services.dtos.requests.product;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package com.tobeto.ecommerce.services.dtos.responses.Product;
+package com.tobeto.ecommerce.services.dtos.responses.product;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,9 +7,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-public class GetByIdProductResponse {
+@AllArgsConstructor
+public class UpdateProductResponse {
 
     private int id;
 
@@ -22,5 +22,4 @@ public class GetByIdProductResponse {
     private int stockAmount;
 
     private String categoryName;
-
 }

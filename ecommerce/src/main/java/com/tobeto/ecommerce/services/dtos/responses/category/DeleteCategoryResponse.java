@@ -1,4 +1,4 @@
-package com.tobeto.ecommerce.services.dtos.requests.Product;
+package com.tobeto.ecommerce.services.dtos.responses.category;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,6 +9,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetByIdProductRequest {
+public class DeleteCategoryResponse {
+
     private int id;
+    private String name;
+
+    private Boolean isActive;
 }

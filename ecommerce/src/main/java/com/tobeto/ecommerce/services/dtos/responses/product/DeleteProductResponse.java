@@ -1,4 +1,4 @@
-package com.tobeto.ecommerce.services.dtos.responses.Product;
+package com.tobeto.ecommerce.services.dtos.responses.product;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ListProductResponse {
+public class DeleteProductResponse {
 
     private int id;
 

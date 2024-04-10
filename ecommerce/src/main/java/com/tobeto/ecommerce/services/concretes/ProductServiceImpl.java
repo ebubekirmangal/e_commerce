@@ -4,11 +4,11 @@ import com.tobeto.ecommerce.core.utils.exceptions.types.BusinessException;
 import com.tobeto.ecommerce.entities.Product;
 import com.tobeto.ecommerce.repositories.ProductRepository;
 import com.tobeto.ecommerce.services.abstracts.ProductService;
-import com.tobeto.ecommerce.services.dtos.requests.Product.AddProductRequest;
-import com.tobeto.ecommerce.services.dtos.requests.Product.DeleteProductRequest;
-import com.tobeto.ecommerce.services.dtos.requests.Product.GetByIdProductRequest;
-import com.tobeto.ecommerce.services.dtos.requests.Product.UpdateProductRequest;
-import com.tobeto.ecommerce.services.dtos.responses.Product.*;
+import com.tobeto.ecommerce.services.dtos.requests.product.AddProductRequest;
+import com.tobeto.ecommerce.services.dtos.requests.product.DeleteProductRequest;
+import com.tobeto.ecommerce.services.dtos.requests.product.GetByIdProductRequest;
+import com.tobeto.ecommerce.services.dtos.requests.product.UpdateProductRequest;
+import com.tobeto.ecommerce.services.dtos.responses.product.*;
 import com.tobeto.ecommerce.services.mapper.ProductMapper;
 import org.springframework.stereotype.Service;
 
@@ -45,9 +45,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public UpdateProductResponse update(UpdateProductRequest product) {
+    public UpdateProductResponse update(UpdateProductRequest request) {
+        Product product = ProductMapper.INSTANCE.productFromUpdateProductRequest(request);
 
-        return null;
+        Product updated = productRepository.save(product);
+
+        UpdateProductResponse response = ProductMapper.INSTANCE.updateProductResponsetoProduct(updated);
+        return response;
     }
 
     @Override

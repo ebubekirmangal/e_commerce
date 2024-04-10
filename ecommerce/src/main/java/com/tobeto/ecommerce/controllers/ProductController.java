@@ -1,11 +1,11 @@
 package com.tobeto.ecommerce.controllers;
 
 import com.tobeto.ecommerce.services.abstracts.ProductService;
-import com.tobeto.ecommerce.services.dtos.requests.Product.AddProductRequest;
-import com.tobeto.ecommerce.services.dtos.requests.Product.DeleteProductRequest;
-import com.tobeto.ecommerce.services.dtos.requests.Product.GetByIdProductRequest;
-import com.tobeto.ecommerce.services.dtos.requests.Product.UpdateProductRequest;
-import com.tobeto.ecommerce.services.dtos.responses.Product.*;
+import com.tobeto.ecommerce.services.dtos.requests.product.AddProductRequest;
+import com.tobeto.ecommerce.services.dtos.requests.product.DeleteProductRequest;
+import com.tobeto.ecommerce.services.dtos.requests.product.GetByIdProductRequest;
+import com.tobeto.ecommerce.services.dtos.requests.product.UpdateProductRequest;
+import com.tobeto.ecommerce.services.dtos.responses.product.*;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
