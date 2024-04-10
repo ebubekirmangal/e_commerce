@@ -1,4 +1,4 @@
-package com.tobeto.ecommerce.services.dtos.requests.Product;
+package com.tobeto.ecommerce.services.dtos.requests.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,6 +9,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductDeleteRequest {
+public class DeleteUserRequest {
     private int id;
 }

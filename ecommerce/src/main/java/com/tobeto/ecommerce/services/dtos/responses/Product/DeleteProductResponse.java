@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductListingResponse {
+public class DeleteProductResponse {
 
     private int id;
 

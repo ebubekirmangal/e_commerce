@@ -9,6 +9,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductGetByIdRequest {
+public class DeleteProductRequest {
     private int id;
 }

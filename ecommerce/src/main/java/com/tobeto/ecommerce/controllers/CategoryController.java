@@ -1,8 +1,8 @@
 package com.tobeto.ecommerce.controllers;
 
 import com.tobeto.ecommerce.services.abstracts.CategoryService;
-import com.tobeto.ecommerce.services.dtos.requests.Category.CategoryAddRequest;
-import com.tobeto.ecommerce.services.dtos.responses.Category.CategoryAddResponse;
+import com.tobeto.ecommerce.services.dtos.requests.Category.AddCategoryRequest;
+import com.tobeto.ecommerce.services.dtos.responses.Category.AddCategoryResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,7 +23,7 @@ public class CategoryController {
 
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
-    public CategoryAddResponse add(CategoryAddRequest request){
+    public AddCategoryResponse add(AddCategoryRequest request){
         return categoryService.add(request);
     }
 

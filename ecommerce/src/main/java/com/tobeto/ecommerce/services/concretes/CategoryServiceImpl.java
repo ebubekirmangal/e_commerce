@@ -3,8 +3,8 @@ package com.tobeto.ecommerce.services.concretes;
 import com.tobeto.ecommerce.entities.Category;
 import com.tobeto.ecommerce.repositories.CategoryRepository;
 import com.tobeto.ecommerce.services.abstracts.CategoryService;
-import com.tobeto.ecommerce.services.dtos.requests.Category.CategoryAddRequest;
-import com.tobeto.ecommerce.services.dtos.responses.Category.CategoryAddResponse;
+import com.tobeto.ecommerce.services.dtos.requests.Category.AddCategoryRequest;
+import com.tobeto.ecommerce.services.dtos.responses.Category.AddCategoryResponse;
 import com.tobeto.ecommerce.services.mapper.CategoryMapper;
 import org.springframework.stereotype.Service;
 
@@ -18,11 +18,11 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryAddResponse add(CategoryAddRequest request) {
+    public AddCategoryResponse add(AddCategoryRequest request) {
         Category category = CategoryMapper.INSTANCE.categoryFromAddRequest(request);
         Category savedCategory = categoryRepository.save(category);
 
-        CategoryAddResponse response = CategoryMapper.INSTANCE.toCategoryAddResponse(savedCategory);
+        AddCategoryResponse response = CategoryMapper.INSTANCE.toCategoryAddResponse(savedCategory);
         return response;
     }
 }

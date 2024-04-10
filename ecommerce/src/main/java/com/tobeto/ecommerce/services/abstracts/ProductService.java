@@ -1,21 +1,28 @@
 package com.tobeto.ecommerce.services.abstracts;
 
-import com.tobeto.ecommerce.services.dtos.requests.Product.ProductAddRequest;
-import com.tobeto.ecommerce.services.dtos.requests.Product.ProductUpdateRequest;
-import com.tobeto.ecommerce.services.dtos.responses.Product.ProductGetResponse;
-import com.tobeto.ecommerce.services.dtos.responses.Product.ProductListingResponse;
+import com.tobeto.ecommerce.services.dtos.requests.Order.OrderProductRequest;
+import com.tobeto.ecommerce.services.dtos.requests.Product.AddProductRequest;
+import com.tobeto.ecommerce.services.dtos.requests.Product.DeleteProductRequest;
+import com.tobeto.ecommerce.services.dtos.requests.Product.GetByIdProductRequest;
+import com.tobeto.ecommerce.services.dtos.requests.Product.UpdateProductRequest;
+import com.tobeto.ecommerce.services.dtos.responses.Product.*;
 
 import java.util.List;
 
 public interface ProductService {
-    ProductGetResponse add(ProductAddRequest newProduct);
+    AddProductResponse add(AddProductRequest request);
 
-    void delete(int request);
+    DeleteProductResponse delete(DeleteProductRequest request);
 
-    ProductGetResponse update(ProductUpdateRequest product);
+    UpdateProductResponse update(UpdateProductRequest product);
 
-    List<ProductListingResponse> getALl();
-
-    ProductGetResponse getById(int request);
-
+    //List<GetAllProductResponse> getALl();
+    GetByIdProductResponse getById(GetByIdProductRequest request);
+    // Stok Güncellemesi
+    void updateStock(List<OrderProductRequest> orderProducts);
+    void updateStock(int productId,int quantity);
+    //Arama
+    List<GetAllProductCustomerResponse>search(String productName, Double minPrice, Double maxPrice, String categoryName);
+    List<GetAllProductAdminResponse>search(String productName, String categoryName);
+    List<LastAddProductResponse>getLastAdded();
 }
