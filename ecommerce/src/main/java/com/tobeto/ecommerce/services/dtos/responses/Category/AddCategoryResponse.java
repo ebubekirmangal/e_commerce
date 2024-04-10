@@ -1,6 +1,5 @@
-package com.tobeto.ecommerce.services.dtos.requests.Category;
+package com.tobeto.ecommerce.services.dtos.responses.Category;
 
-import com.tobeto.ecommerce.entities.Category;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,15 +9,13 @@ import java.util.List;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-public class CategoryAddRequest {
+@AllArgsConstructor
+public class AddCategoryResponse {
 
+    private int id;
     private String name;
 
     private Boolean isActive;
 
-    private int parentId;
-
-    private List<Integer> subId;
 }

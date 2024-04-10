@@ -1,21 +1,22 @@
 package com.tobeto.ecommerce.services.abstracts;
 
-import com.tobeto.ecommerce.services.dtos.requests.Product.ProductAddRequest;
-import com.tobeto.ecommerce.services.dtos.requests.Product.ProductUpdateRequest;
-import com.tobeto.ecommerce.services.dtos.responses.Product.ProductGetResponse;
-import com.tobeto.ecommerce.services.dtos.responses.Product.ProductListingResponse;
+import com.tobeto.ecommerce.services.dtos.requests.Product.AddProductRequest;
+import com.tobeto.ecommerce.services.dtos.requests.Product.DeleteProductRequest;
+import com.tobeto.ecommerce.services.dtos.requests.Product.GetByIdProductRequest;
+import com.tobeto.ecommerce.services.dtos.requests.Product.UpdateProductRequest;
+import com.tobeto.ecommerce.services.dtos.responses.Product.*;
 
 import java.util.List;
 
 public interface ProductService {
-    ProductGetResponse add(ProductAddRequest newProduct);
+    AddProductResponse add(AddProductRequest newProduct);
 
-    void delete(int request);
+    DeleteProductResponse delete(DeleteProductRequest request);
 
-    ProductGetResponse update(ProductUpdateRequest product);
+    UpdateProductResponse update(UpdateProductRequest product);
 
-    List<ProductListingResponse> getALl();
+    List<ListProductResponse> getALl();
 
-    ProductGetResponse getById(int request);
+    GetByIdProductResponse getById(GetByIdProductRequest request);
 
 }

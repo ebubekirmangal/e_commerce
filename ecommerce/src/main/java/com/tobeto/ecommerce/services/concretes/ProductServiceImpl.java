@@ -4,10 +4,11 @@ import com.tobeto.ecommerce.core.utils.exceptions.types.BusinessException;
 import com.tobeto.ecommerce.entities.Product;
 import com.tobeto.ecommerce.repositories.ProductRepository;
 import com.tobeto.ecommerce.services.abstracts.ProductService;
-import com.tobeto.ecommerce.services.dtos.requests.Product.ProductAddRequest;
-import com.tobeto.ecommerce.services.dtos.requests.Product.ProductUpdateRequest;
-import com.tobeto.ecommerce.services.dtos.responses.Product.ProductGetResponse;
-import com.tobeto.ecommerce.services.dtos.responses.Product.ProductListingResponse;
+import com.tobeto.ecommerce.services.dtos.requests.Product.AddProductRequest;
+import com.tobeto.ecommerce.services.dtos.requests.Product.DeleteProductRequest;
+import com.tobeto.ecommerce.services.dtos.requests.Product.GetByIdProductRequest;
+import com.tobeto.ecommerce.services.dtos.requests.Product.UpdateProductRequest;
+import com.tobeto.ecommerce.services.dtos.responses.Product.*;
 import com.tobeto.ecommerce.services.mapper.ProductMapper;
 import org.springframework.stereotype.Service;
 
@@ -24,46 +25,48 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductGetResponse add(ProductAddRequest newProduct) {
+    public AddProductResponse add(AddProductRequest newProduct) {
         nameShouldNotBeSameProductName(newProduct.getName());
 
         Product product = ProductMapper.INSTANCE.productFromAddRequest(newProduct);
         Product savedProduct = productRepository.save(product);
 
-        ProductGetResponse getResponse = ProductMapper.INSTANCE.toProductGetResponse(savedProduct);
+        AddProductResponse getResponse = ProductMapper.INSTANCE.toProductAddResponse(savedProduct);
 
         return getResponse;
     }
 
     @Override
-    public void delete(int id) {
-        Product product = productRepository.findById(id).orElseThrow(() -> new RuntimeException("id bulunamadı"));
+    public DeleteProductResponse delete(DeleteProductRequest request) {
+        Product product = productRepository.findById(request.getId()).orElseThrow(() -> new RuntimeException("id bulunamadı"));
         productRepository.delete(product);
+        DeleteProductResponse productDeleteResponse = new DeleteProductResponse(product.getId(), product.getName(), product.getDescription(), product.getUnitPrice(), product.getStockAmount(),product.getCategory().getName());
+        return productDeleteResponse;
     }
 
     @Override
-    public ProductGetResponse update(ProductUpdateRequest product) {
+    public UpdateProductResponse update(UpdateProductRequest product) {
 
         return null;
     }
 
     @Override
-    public List<ProductListingResponse> getALl() {
+    public List<ListProductResponse> getALl() {
         List<Product> products = productRepository.findAll();
 
-        List<ProductListingResponse> result = new ArrayList<>();
+        List<ListProductResponse> result = new ArrayList<>();
 
         for(Product product:products){
-            ProductListingResponse dto = ProductMapper.INSTANCE.toProductListingResponse(product);
+            ListProductResponse dto = ProductMapper.INSTANCE.toProductListingResponse(product);
 
             result.add(dto);
         }
         return result;
     }
 
-    public ProductGetResponse getById(int request){
-        Product product = productRepository.getById(request);
-        ProductGetResponse getResponse = ProductMapper.INSTANCE.toProductGetResponse(product);
+    public GetByIdProductResponse getById(GetByIdProductRequest request){
+        Product product = productRepository.getById(request.getId());
+        GetByIdProductResponse getResponse = ProductMapper.INSTANCE.toProductGetByIdResponse(product);
         return getResponse;
     }
 

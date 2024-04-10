@@ -1,32 +1,26 @@
-package com.tobeto.ecommerce.entities;
+package com.tobeto.ecommerce.services.dtos.responses.user;
 
-import jakarta.persistence.*;
+import com.tobeto.ecommerce.entities.UserType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity
-@Table(name="users")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class DeleteUserResponse {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "first_name")
     private String firstName;
 
-    @Column(name = "last_name")
     private String lastName;
 
     private String email;
-    @Column(name = "password")
+
     private String password;
-    @Enumerated(EnumType.STRING)
+
     private UserType type;
 }
