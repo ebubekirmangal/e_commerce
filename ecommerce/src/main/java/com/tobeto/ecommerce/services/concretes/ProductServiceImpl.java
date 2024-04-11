@@ -4,6 +4,7 @@ import com.tobeto.ecommerce.core.utils.exceptions.types.BusinessException;
 import com.tobeto.ecommerce.entities.Product;
 import com.tobeto.ecommerce.repositories.ProductRepository;
 import com.tobeto.ecommerce.services.abstracts.ProductService;
+import com.tobeto.ecommerce.services.dtos.requests.order.OrderProductRequest;
 import com.tobeto.ecommerce.services.dtos.requests.product.AddProductRequest;
 import com.tobeto.ecommerce.services.dtos.requests.product.DeleteProductRequest;
 import com.tobeto.ecommerce.services.dtos.requests.product.GetByIdProductRequest;
@@ -80,6 +81,34 @@ public class ProductServiceImpl implements ProductService {
         if(productWithSameName.isPresent()){
              throw new BusinessException("Aynı isimde bir ürün zaten var.");
         }
+    }
+
+    //Ürün stoklarının güncellendiği kısım
+    public void updateStock(List<OrderProductRequest> orderProducts) {
+        for(OrderProductRequest orderProduct:orderProducts) {
+            int productId=orderProduct.getProductId();
+            int quantity=orderProduct.getQuantity();
+            Product product = productRepository.findById(productId)
+                    .orElseThrow(() -> new BusinessException("Ürün bulunamadı: " + productId));
+
+            int updatedStock = product.getStockAmount() - quantity;
+            if (updatedStock <= 0) {
+                throw new BusinessException("Yetersiz stok: " + product.getName());
+            }
+            product.setStockAmount(updatedStock);
+            productRepository.save(product);
+        }
+    }
+    @Override
+    public void updateStock(int productId, int quantity) {
+        Product product =productRepository.findById(productId)
+                .orElseThrow(()-> new BusinessException("Ürün bulunamadı:"+productId));
+        int updatedStock=product.getStockAmount()-quantity;
+        if(updatedStock<=0)
+            throw new BusinessException("Yetersiz stok:" +product.getName());
+
+        product.setStockAmount(updatedStock);
+        productRepository.save(product);
     }
 
 }

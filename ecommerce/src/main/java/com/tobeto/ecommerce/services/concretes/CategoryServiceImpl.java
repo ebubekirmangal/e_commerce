@@ -12,6 +12,7 @@ import com.tobeto.ecommerce.services.dtos.responses.category.*;
 import com.tobeto.ecommerce.services.mapper.CategoryMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -26,6 +27,16 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public AddCategoryResponse add(AddCategoryRequest request) {
         Category category = CategoryMapper.INSTANCE.categoryFromAddRequest(request);
+
+        // Eğer parentCategoryId 0 ise, en üst düzey kategori olarak kabul edilir
+        if (request.getParentCategoryId() != 0) {
+            // Parent kategori belirtilmişse, veritabanından bu kategoriyi alıyoruz
+            Category parentCategory = categoryRepository.findById(request.getParentCategoryId())
+                    .orElseThrow(() -> new IllegalArgumentException("Parent category with id " + request.getParentCategoryId() + " not found"));
+            category.setParentCategory(parentCategory);
+        }
+
+        // Kategoriyi kaydet
         Category savedCategory = categoryRepository.save(category);
 
         AddCategoryResponse response = CategoryMapper.INSTANCE.toCategoryAddResponse(savedCategory);
@@ -44,11 +55,53 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<ListCategoryResponse> getAll() {
-       List<Category> categories = categoryRepository.findAll();
+//       List<Category> categories = categoryRepository.findAll();
+//
+//       List<ListCategoryResponse> responses = CategoryMapper.INSTANCE.listToCategoryDto(categories);
+//
+//       return responses;
 
-       List<ListCategoryResponse> responses = CategoryMapper.INSTANCE.listToCategoryDto(categories);
+        // Tüm kategorileri veritabanından al
+        List<Category> categories = categoryRepository.findAll();
 
-       return responses;
+        // Kategorileri sıralamak için bir metod çağır
+        List<Category> sortedCategories = sortCategories(categories);
+
+        // Sıralanmış kategorileri DTO'ya dönüştür
+        List<ListCategoryResponse> responses = CategoryMapper.INSTANCE.listToCategoryDto(sortedCategories);
+
+        return responses;
+    }
+
+    // Kategorileri sıralamak için yardımcı bir metod
+    private List<Category> sortCategories(List<Category> categories) {
+        List<Category> sortedCategories = new ArrayList<>();
+
+        // En üst kategorileri bul
+        for (Category category : categories) {
+            if (category.getParentCategory() == null) {
+                sortedCategories.add(category);
+            }
+        }
+
+        // Her bir üst kategori altındaki alt kategorileri bul ve sırala
+        for (Category parentCategory : sortedCategories) {
+            addSubCategories(categories, parentCategory);
+        }
+
+        return sortedCategories;
+    }
+
+    // Alt kategorileri eklemek için yardımcı bir metod
+    private void addSubCategories(List<Category> categories, Category parentCategory) {
+        List<Category> subCategories = new ArrayList<>();
+        for (Category category : categories) {
+            if (category.getParentCategory() != null && category.getParentCategory().getId() == parentCategory.getId()) {
+                subCategories.add(category);
+                addSubCategories(categories, category); // Alt alt kategorileri de ekle
+            }
+        }
+        parentCategory.setSubCategories(subCategories);
     }
 
     @Override

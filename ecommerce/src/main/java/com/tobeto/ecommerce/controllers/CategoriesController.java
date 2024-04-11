@@ -14,12 +14,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/category")
-public class CategoryController {
+public class CategoriesController {
 
     private final CategoryService categoryService;
 
     @Autowired
-    public CategoryController(CategoryService categoryService) {
+    public CategoriesController(CategoryService categoryService) {
         this.categoryService = categoryService;
     }
 

@@ -15,10 +15,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/products")
-public class ProductController {
+public class ProductsController {
     private ProductService productService;
 
-    public ProductController(ProductService productService) {
+    public ProductsController(ProductService productService) {
         this.productService = productService;
     }
 

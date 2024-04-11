@@ -1,5 +1,6 @@
 package com.tobeto.ecommerce.services.abstracts;
 
+import com.tobeto.ecommerce.services.dtos.requests.order.OrderProductRequest;
 import com.tobeto.ecommerce.services.dtos.requests.product.AddProductRequest;
 import com.tobeto.ecommerce.services.dtos.requests.product.DeleteProductRequest;
 import com.tobeto.ecommerce.services.dtos.requests.product.GetByIdProductRequest;
@@ -18,5 +19,9 @@ public interface ProductService {
     List<ListProductResponse> getALl();
 
     GetByIdProductResponse getById(GetByIdProductRequest request);
+
+    void updateStock(List<OrderProductRequest> orderProductRequests);
+
+    void updateStock(int productId,int quantity);
 
 }

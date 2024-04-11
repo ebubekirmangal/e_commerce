@@ -1,8 +1,6 @@
 package com.tobeto.ecommerce.entities;
 
-import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Null;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +15,10 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Category {
+
+    public Category(List<Product> products) {
+        this.products = products;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,8 +35,8 @@ public class Category {
     @OneToMany(mappedBy = "parentCategory")
     private List<Category> subCategories;
 
-    @ManyToOne
-    @JoinColumn(name = "parent_id")
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "parent_id",nullable = true)
     private Category parentCategory;
 
 

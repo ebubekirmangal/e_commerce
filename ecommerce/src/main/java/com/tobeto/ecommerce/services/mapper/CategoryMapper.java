@@ -35,7 +35,8 @@ public interface CategoryMapper {
             return null;
         }
         return subCategories.stream()
-                .map(Category::getName) // veya istediğiniz başka bir özellik
+                .map(Category::getName)
                 .collect(Collectors.toList());
     }
+
 }
