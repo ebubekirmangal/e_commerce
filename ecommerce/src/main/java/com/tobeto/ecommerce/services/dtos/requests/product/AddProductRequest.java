@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -22,5 +24,7 @@ public class AddProductRequest {
     private int stockAmount;
 
     private int categoryId;
+
+
 
 }

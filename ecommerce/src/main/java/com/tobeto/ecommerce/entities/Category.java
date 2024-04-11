@@ -1,5 +1,6 @@
 package com.tobeto.ecommerce.entities;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Null;
 import lombok.AllArgsConstructor;
@@ -28,6 +29,13 @@ public class Category {
 
     @OneToMany(mappedBy = "category")
     private List<Product> products;
+
+    @OneToMany(mappedBy = "parentCategory")
+    private List<Category> subCategories;
+
+    @ManyToOne
+    @JoinColumn(name = "parent_id")
+    private Category parentCategory;
 
 
 }

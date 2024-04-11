@@ -15,4 +15,5 @@ public class AddCategoryRequest {
 
     private Boolean isActive;
 
+    private int parentCategoryId;
 }

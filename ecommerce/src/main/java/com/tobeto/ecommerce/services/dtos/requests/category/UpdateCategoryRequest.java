@@ -16,4 +16,6 @@ public class UpdateCategoryRequest {
     private String name;
 
     private Boolean isActive;
+
+    private int parentCategoryId;
 }
