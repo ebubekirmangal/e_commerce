@@ -1,5 +1,6 @@
 package com.tobeto.ecommerce.services.abstracts;
 
+import com.tobeto.ecommerce.entities.Product;
 import com.tobeto.ecommerce.services.dtos.requests.order.OrderProductRequest;
 import com.tobeto.ecommerce.services.dtos.requests.product.AddProductRequest;
 import com.tobeto.ecommerce.services.dtos.requests.product.DeleteProductRequest;
@@ -26,4 +27,6 @@ public interface ProductService {
     List<GetAllProductAdminResponse>search(String productName, String categoryName);
 
     List<GetLastAddedProductResponse>getLastAddedProduct();
+    Double getProductPrice(int productId);
+    Product getProductById(int productId);
 }

@@ -9,16 +9,22 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetAllOrderResponse {
+public class GetAllOrderProductResponse {
 
-    private int id;
+    private int orderId;
 
     private int productId;
 
+    private String productName;
+
     private int quantity;
 
-    private Double unitPrice;
+    private Double totalPrice;
 
     private int userId;
+
+    private String userFirstName;
+
+    private String userLastName;
 
 }

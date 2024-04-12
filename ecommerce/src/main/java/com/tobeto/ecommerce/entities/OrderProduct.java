@@ -21,14 +21,14 @@ public class OrderProduct {
 
     private int quantity;
 
-    private double totalPrice;
+    private Double totalPrice;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "order_id")
     private Order order;
 
-    @ManyToOne
-    @JoinColumn(name ="prooduct_id")
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name ="product_id")
     private  Product product;
 
 }

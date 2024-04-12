@@ -29,7 +29,16 @@ public class ProductServiceImpl implements ProductService {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
     }
+    public Product getProductById(int productId) {
+        return productRepository.findById(productId)
+                .orElse(null); // veya exception fırlatılabilir
+    }
+    public Double getProductPrice(int productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("Ürün bulunamadı"));
 
+        return product.getUnitPrice();
+    }
     @Override
     public AddProductResponse add(AddProductRequest newProduct) {
         nameShouldNotBeSameProductName(newProduct.getName());

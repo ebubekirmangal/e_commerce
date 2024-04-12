@@ -1,16 +1,18 @@
 package com.tobeto.ecommerce.services.concretes;
 
 import com.tobeto.ecommerce.entities.Order;
+import com.tobeto.ecommerce.entities.OrderProduct;
+import com.tobeto.ecommerce.entities.Product;
+import com.tobeto.ecommerce.repositories.OrderProductRepository;
 import com.tobeto.ecommerce.repositories.OrderRepository;
-import com.tobeto.ecommerce.repositories.ProductRepository;
 import com.tobeto.ecommerce.services.abstracts.OrderService;
 import com.tobeto.ecommerce.services.abstracts.ProductService;
 import com.tobeto.ecommerce.services.dtos.requests.order.AddOrderRequest;
 import com.tobeto.ecommerce.services.dtos.requests.order.OrderProductRequest;
+import com.tobeto.ecommerce.services.dtos.responses.order.GetAllOrderProductResponse;
 import com.tobeto.ecommerce.services.dtos.responses.order.AddOrderResponse;
-import com.tobeto.ecommerce.services.dtos.responses.order.GetAllOrderResponse;
 import com.tobeto.ecommerce.services.mapper.OrderMapper;
-import jdk.dynalink.linker.LinkerServices;
+import com.tobeto.ecommerce.services.mapper.OrderProductMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,36 +26,55 @@ public class OrderServiceImpl implements OrderService {
 
     private OrderRepository orderRepository;
 
+    private OrderProductRepository orderProductRepository;
+
     @Autowired
-    public OrderServiceImpl(ProductService productService, OrderRepository orderRepository) {
+    public OrderServiceImpl(ProductService productService, OrderRepository orderRepository,OrderProductRepository orderProductRepository) {
         this.productService = productService;
         this.orderRepository = orderRepository;
+        this.orderProductRepository = orderProductRepository;
     }
 
     @Override
     public AddOrderResponse add(AddOrderRequest request) {
-
         Order order = OrderMapper.INSTANCE.orderFromAddRequest(request);
-        Order saved = orderRepository.save(order);
+        Order savedOrder = orderRepository.save(order);
 
         List<OrderProductRequest> orderProducts = request.getOrderProductRequest();
-        for(OrderProductRequest orderProduct:orderProducts){
-            int productId=orderProduct.getProductId();
-            int quantity= orderProduct.getQuantity();
-            productService.updateStock(productId,quantity);
+        for (OrderProductRequest orderProductRequest : orderProducts) {
+            int productId = orderProductRequest.getProductId();
+            int quantity = orderProductRequest.getQuantity();
+            Double totalPrice = productService.getProductPrice(productId) * quantity;
+
+            OrderProduct orderProduct = new OrderProduct();
+            orderProduct.setOrder(savedOrder);
+
+            // Ürün bilgilerini al
+            Product product = productService.getProductById(productId);
+            if (product == null) {
+                // Hata işleme veya loglama yapılabilir
+                continue;
+            }
+            orderProduct.setProduct(product);
+            orderProduct.setQuantity(quantity);
+            orderProduct.setTotalPrice(totalPrice);
+
+            // OrderProduct kaydını veritabanına kaydetme
+            orderProductRepository.save(orderProduct);
         }
-        AddOrderResponse response = OrderMapper.INSTANCE.OrderToAddResponse(saved);
+
+        AddOrderResponse response = OrderMapper.INSTANCE.OrderToAddResponse(savedOrder);
         return response;
     }
 
     @Override
-    public List<GetAllOrderResponse> getAll() {
-        List<Order> orders= orderRepository.findAll();
+    public List<GetAllOrderProductResponse> getAll() {
+        List<OrderProduct> orders= orderProductRepository.findAll();
+        System.out.println("Veritabanından alınan sipariş sayısı: " + orders.size());
+        List<GetAllOrderProductResponse> result = new ArrayList<>();
 
-        List<GetAllOrderResponse> result = new ArrayList<>();
-
-        for(Order order:orders){
-            GetAllOrderResponse dto = OrderMapper.INSTANCE.OrderToGetAllResponse(order);
+        for(OrderProduct order:orders){
+            GetAllOrderProductResponse dto = OrderProductMapper.INSTANCE.orderProductToGetALlResponse(order);
             result.add(dto);
         }
 

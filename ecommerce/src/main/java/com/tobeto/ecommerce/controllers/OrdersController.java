@@ -3,7 +3,7 @@ package com.tobeto.ecommerce.controllers;
 import com.tobeto.ecommerce.services.abstracts.OrderService;
 import com.tobeto.ecommerce.services.dtos.requests.order.AddOrderRequest;
 import com.tobeto.ecommerce.services.dtos.responses.order.AddOrderResponse;
-import com.tobeto.ecommerce.services.dtos.responses.order.GetAllOrderResponse;
+import com.tobeto.ecommerce.services.dtos.responses.order.GetAllOrderProductResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,9 +25,9 @@ public class OrdersController {
         return orderService.add(request);
     }
 
-    @GetMapping("/getAll")
+    @GetMapping("/getAllDetails")
     @ResponseStatus(HttpStatus.OK)
-    public List<GetAllOrderResponse> getAll(){
+    public List<GetAllOrderProductResponse> getAll(){
         return orderService.getAll();
     }
 }
