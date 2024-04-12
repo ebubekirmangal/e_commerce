@@ -1,7 +1,9 @@
 package com.tobeto.ecommerce.services.concretes;
 
 import com.tobeto.ecommerce.core.utils.exceptions.types.BusinessException;
+import com.tobeto.ecommerce.entities.Category;
 import com.tobeto.ecommerce.entities.Product;
+import com.tobeto.ecommerce.repositories.CategoryRepository;
 import com.tobeto.ecommerce.repositories.ProductRepository;
 import com.tobeto.ecommerce.services.abstracts.ProductService;
 import com.tobeto.ecommerce.services.dtos.requests.order.OrderProductRequest;
@@ -21,17 +23,35 @@ import java.util.Optional;
 public class ProductServiceImpl implements ProductService {
     private ProductRepository productRepository;
 
-    public ProductServiceImpl(ProductRepository productRepository) {
+    private CategoryRepository categoryRepository;
+
+    public ProductServiceImpl(ProductRepository productRepository, CategoryRepository categoryRepository) {
         this.productRepository = productRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     @Override
     public AddProductResponse add(AddProductRequest newProduct) {
         nameShouldNotBeSameProductName(newProduct.getName());
 
+        // AddProductRequest'ten Product'a dönüştürme
         Product product = ProductMapper.INSTANCE.productFromAddRequest(newProduct);
+
+        // Yeni ürünün kategorisini alın
+        int categoryId = newProduct.getCategoryId();
+        Category category = categoryRepository.findById(categoryId).orElse(null);
+        if (category == null) {
+            // Belirtilen kategori bulunamadı
+            throw new BusinessException("Category with id " + categoryId + " not found");
+        }
+
+        // Ürüne kategoriyi atama
+        product.setCategory(category);
+
+        // Ürünü kaydetme
         Product savedProduct = productRepository.save(product);
 
+        // Kaydedilen ürünü AddProductResponse'ya dönüştürme
         AddProductResponse getResponse = ProductMapper.INSTANCE.toProductAddResponse(savedProduct);
 
         return getResponse;
@@ -39,7 +59,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public DeleteProductResponse delete(DeleteProductRequest request) {
-        Product product = productRepository.findById(request.getId()).orElseThrow(() -> new RuntimeException("id bulunamadı"));
+        Product product = productRepository.findById(request.getId()).orElseThrow(() -> new BusinessException("id bulunamadı"));
         productRepository.delete(product);
         DeleteProductResponse productDeleteResponse = new DeleteProductResponse(product.getId(), product.getName(), product.getDescription(), product.getUnitPrice(), product.getStockAmount(),product.getCategory().getName());
         return productDeleteResponse;
@@ -55,22 +75,31 @@ public class ProductServiceImpl implements ProductService {
         return response;
     }
 
+    public List<GetAllProductCustomerResponse> search(String productName, Double minPrice, Double maxPrice, String categoryName) {
+        return productRepository.search(productName,minPrice,maxPrice,categoryName);
+    }
     @Override
-    public List<ListProductResponse> getALl() {
-        List<Product> products = productRepository.findAll();
-
-        List<ListProductResponse> result = new ArrayList<>();
-
-        for(Product product:products){
-            ListProductResponse dto = ProductMapper.INSTANCE.toProductListingResponse(product);
-
-            result.add(dto);
-        }
-        return result;
+    public List<GetAllProductAdminResponse> search(String productName, String categoryName) {
+        return productRepository.search(productName,categoryName);
     }
 
+    @Override
+    public List<GetLastAddedProductResponse> getLastAddedProduct() {
+        List<Product> products = productRepository.findTop5ByOrderByIdDesc();
+        List<GetLastAddedProductResponse> lastAddedProductResponses = new ArrayList<>();
+        for (Product product:products){
+            GetLastAddedProductResponse dto = ProductMapper.INSTANCE.toLastAddedProductResponse(product);
+            lastAddedProductResponses.add(dto);
+        }
+        return lastAddedProductResponses;
+    }
+
+
     public GetByIdProductResponse getById(GetByIdProductRequest request){
-        Product product = productRepository.getById(request.getId());
+        int productId = request.getId();
+
+        Product product = productRepository.findById(productId).orElseThrow(()-> new BusinessException("id bulunamadı."));
+
         GetByIdProductResponse getResponse = ProductMapper.INSTANCE.toProductGetByIdResponse(product);
         return getResponse;
     }

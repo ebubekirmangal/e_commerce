@@ -3,10 +3,7 @@ package com.tobeto.ecommerce.services.mapper;
 import com.tobeto.ecommerce.entities.Product;
 import com.tobeto.ecommerce.services.dtos.requests.product.AddProductRequest;
 import com.tobeto.ecommerce.services.dtos.requests.product.UpdateProductRequest;
-import com.tobeto.ecommerce.services.dtos.responses.product.AddProductResponse;
-import com.tobeto.ecommerce.services.dtos.responses.product.GetByIdProductResponse;
-import com.tobeto.ecommerce.services.dtos.responses.product.ListProductResponse;
-import com.tobeto.ecommerce.services.dtos.responses.product.UpdateProductResponse;
+import com.tobeto.ecommerce.services.dtos.responses.product.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -19,7 +16,7 @@ public interface ProductMapper {
     @Mapping(target = "categoryName",source = "category.name")
     AddProductResponse toProductAddResponse(Product response);
     @Mapping(target = "categoryName",source = "category.name")
-    ListProductResponse toProductListingResponse(Product response);
+    GetLastAddedProductResponse toLastAddedProductResponse(Product response);
     @Mapping(target = "categoryName",source = "category.name")
     GetByIdProductResponse toProductGetByIdResponse(Product response);
     @Mapping(target = "category.id",source = "categoryId")

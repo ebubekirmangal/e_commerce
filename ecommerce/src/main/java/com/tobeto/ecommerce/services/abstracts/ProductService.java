@@ -16,12 +16,14 @@ public interface ProductService {
 
     UpdateProductResponse update(UpdateProductRequest product);
 
-    List<ListProductResponse> getALl();
-
     GetByIdProductResponse getById(GetByIdProductRequest request);
 
     void updateStock(List<OrderProductRequest> orderProductRequests);
 
     void updateStock(int productId,int quantity);
 
+    List<GetAllProductCustomerResponse>search(String productName, Double minPrice, Double maxPrice, String categoryName);
+    List<GetAllProductAdminResponse>search(String productName, String categoryName);
+
+    List<GetLastAddedProductResponse>getLastAddedProduct();
 }

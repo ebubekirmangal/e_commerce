@@ -55,53 +55,11 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<ListCategoryResponse> getAll() {
-//       List<Category> categories = categoryRepository.findAll();
-//
-//       List<ListCategoryResponse> responses = CategoryMapper.INSTANCE.listToCategoryDto(categories);
-//
-//       return responses;
+       List<Category> categories = categoryRepository.findAll();
 
-        // Tüm kategorileri veritabanından al
-        List<Category> categories = categoryRepository.findAll();
+       List<ListCategoryResponse> responses = CategoryMapper.INSTANCE.listToCategoryDto(categories);
 
-        // Kategorileri sıralamak için bir metod çağır
-        List<Category> sortedCategories = sortCategories(categories);
-
-        // Sıralanmış kategorileri DTO'ya dönüştür
-        List<ListCategoryResponse> responses = CategoryMapper.INSTANCE.listToCategoryDto(sortedCategories);
-
-        return responses;
-    }
-
-    // Kategorileri sıralamak için yardımcı bir metod
-    private List<Category> sortCategories(List<Category> categories) {
-        List<Category> sortedCategories = new ArrayList<>();
-
-        // En üst kategorileri bul
-        for (Category category : categories) {
-            if (category.getParentCategory() == null) {
-                sortedCategories.add(category);
-            }
-        }
-
-        // Her bir üst kategori altındaki alt kategorileri bul ve sırala
-        for (Category parentCategory : sortedCategories) {
-            addSubCategories(categories, parentCategory);
-        }
-
-        return sortedCategories;
-    }
-
-    // Alt kategorileri eklemek için yardımcı bir metod
-    private void addSubCategories(List<Category> categories, Category parentCategory) {
-        List<Category> subCategories = new ArrayList<>();
-        for (Category category : categories) {
-            if (category.getParentCategory() != null && category.getParentCategory().getId() == parentCategory.getId()) {
-                subCategories.add(category);
-                addSubCategories(categories, category); // Alt alt kategorileri de ekle
-            }
-        }
-        parentCategory.setSubCategories(subCategories);
+       return responses;
     }
 
     @Override

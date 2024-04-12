@@ -29,7 +29,7 @@ public class Product {
     @Column(name = "stock_amount")
     private int stockAmount;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
 

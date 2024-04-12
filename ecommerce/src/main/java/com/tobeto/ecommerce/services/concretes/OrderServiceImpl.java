@@ -8,11 +8,13 @@ import com.tobeto.ecommerce.services.abstracts.ProductService;
 import com.tobeto.ecommerce.services.dtos.requests.order.AddOrderRequest;
 import com.tobeto.ecommerce.services.dtos.requests.order.OrderProductRequest;
 import com.tobeto.ecommerce.services.dtos.responses.order.AddOrderResponse;
+import com.tobeto.ecommerce.services.dtos.responses.order.GetAllOrderResponse;
 import com.tobeto.ecommerce.services.mapper.OrderMapper;
 import jdk.dynalink.linker.LinkerServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -42,5 +44,19 @@ public class OrderServiceImpl implements OrderService {
         }
         AddOrderResponse response = OrderMapper.INSTANCE.OrderToAddResponse(saved);
         return response;
+    }
+
+    @Override
+    public List<GetAllOrderResponse> getAll() {
+        List<Order> orders= orderRepository.findAll();
+
+        List<GetAllOrderResponse> result = new ArrayList<>();
+
+        for(Order order:orders){
+            GetAllOrderResponse dto = OrderMapper.INSTANCE.OrderToGetAllResponse(order);
+            result.add(dto);
+        }
+
+        return result;
     }
 }

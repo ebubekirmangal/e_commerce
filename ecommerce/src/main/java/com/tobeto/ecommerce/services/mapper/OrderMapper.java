@@ -5,6 +5,7 @@ import com.tobeto.ecommerce.entities.OrderProduct;
 import com.tobeto.ecommerce.services.dtos.requests.order.AddOrderRequest;
 import com.tobeto.ecommerce.services.dtos.requests.order.OrderProductRequest;
 import com.tobeto.ecommerce.services.dtos.responses.order.AddOrderResponse;
+import com.tobeto.ecommerce.services.dtos.responses.order.GetAllOrderResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -21,4 +22,6 @@ public interface OrderMapper {
     @Mapping(target = "orderId",source = "id")
     AddOrderResponse OrderToAddResponse(Order order);
     List<OrderProduct> mapToOrderProducts(List<OrderProductRequest> orderProductRequests);
+
+    GetAllOrderResponse OrderToGetAllResponse(Order order);
 }

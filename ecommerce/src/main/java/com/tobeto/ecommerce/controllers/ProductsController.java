@@ -40,10 +40,20 @@ public class ProductsController {
     public DeleteProductResponse delete(DeleteProductRequest request){
         return productService.delete(request);
     }
-    @GetMapping("/getAll")
+    @GetMapping("/getAllForCustomer")
     @ResponseStatus(HttpStatus.OK)
-    public List<ListProductResponse> getAll(){
-       return productService.getALl();
+    public List<GetAllProductCustomerResponse> search(@RequestParam(required = false) String productName, @RequestParam(required = false) Double minPrice, @RequestParam(required = false) Double maxPrice, @RequestParam(required = false) String categoryName){
+        return productService.search(productName, minPrice,maxPrice,categoryName);
+    }
+    @GetMapping("/getAllForAdmin")
+    @ResponseStatus(HttpStatus.OK)
+    public List<GetAllProductAdminResponse> search(@RequestParam(required = false) String productName, @RequestParam(required = false) String categoryName){
+        return productService.search(productName,categoryName);
+    }
+    @GetMapping("/getLastAddedProduct")
+    @ResponseStatus(HttpStatus.OK)
+    public List<GetLastAddedProductResponse> getLastAddedProduct(){
+        return productService.getLastAddedProduct();
     }
 
     @GetMapping("/getById")
