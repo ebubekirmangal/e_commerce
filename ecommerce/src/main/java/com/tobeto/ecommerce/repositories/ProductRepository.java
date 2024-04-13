@@ -3,6 +3,7 @@ package com.tobeto.ecommerce.repositories;
 import com.tobeto.ecommerce.entities.Product;
 import com.tobeto.ecommerce.services.dtos.responses.product.GetAllProductAdminResponse;
 import com.tobeto.ecommerce.services.dtos.responses.product.GetAllProductCustomerResponse;
+import com.tobeto.ecommerce.services.dtos.responses.product.GetAllTopSellingProductResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -27,4 +28,9 @@ public interface ProductRepository extends JpaRepository<Product,Integer> {
     List<GetAllProductAdminResponse> search(String productName, String categoryName);
 
     List<Product> findTop5ByOrderByIdDesc();
+
+    @Query("SELECT new com.tobeto.ecommerce.services.dtos.responses.product.GetAllTopSellingProductResponse(p.id,p.name,p.salesCount,p.category.name)" +
+            " FROM Product p" +
+            "ORDER BY (p.salesCount DESC")
+    List<GetAllTopSellingProductResponse> search(String productName, int salesCount);
 }

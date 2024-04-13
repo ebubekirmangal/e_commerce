@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -28,7 +29,7 @@ public class Category {
 
     @Column(name = "is_active")
     private Boolean isActive;
-
+    
     @OneToMany(mappedBy = "category")
     private List<Product> products;
 

@@ -25,8 +25,12 @@ public interface ProductService {
 
     List<GetAllProductCustomerResponse>search(String productName, Double minPrice, Double maxPrice, String categoryName);
     List<GetAllProductAdminResponse>search(String productName, String categoryName);
-
+    List<GetAllTopSellingProductResponse>search(String productName, int salesCount);
     List<GetLastAddedProductResponse>getLastAddedProduct();
     Double getProductPrice(int productId);
     Product getProductById(int productId);
+
+
+
+
 }

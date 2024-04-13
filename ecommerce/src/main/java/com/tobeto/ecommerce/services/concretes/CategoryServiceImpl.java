@@ -55,17 +55,17 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<ListCategoryResponse> getAll() {
-       List<Category> categories = categoryRepository.findAll();
+        List<Category> categories = categoryRepository.findAll();
 
-       List<ListCategoryResponse> responses = CategoryMapper.INSTANCE.listToCategoryDto(categories);
+        List<ListCategoryResponse> responses = CategoryMapper.INSTANCE.listToCategoryDto(categories);
 
-       return responses;
+        return responses;
     }
 
     @Override
     public GetByIdCategoryResponse getById(GetByIdCategoryRequest request) {
 
-        Category findCategory =  categoryRepository.findById(request.getId()).orElseThrow(()-> new BusinessException("Verilen id'de Categori bulunmuyor."));
+        Category findCategory = categoryRepository.findById(request.getId()).orElseThrow(() -> new BusinessException("Verilen id'de Categori bulunmuyor."));
 
         GetByIdCategoryResponse response = CategoryMapper.INSTANCE.GetByIdToCategoryDto(findCategory);
         return response;
@@ -74,9 +74,11 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public DeleteCategoryResponse delete(DeleteCategoryRequest request) {
 
-        Category findCategory =  categoryRepository.findById(request.getId()).orElseThrow(()-> new BusinessException("Verilen id'de Categori bulunmuyor."));
+        Category findCategory = categoryRepository.findById(request.getId()).orElseThrow(() -> new BusinessException("Verilen id'de Categori bulunmuyor."));
         categoryRepository.delete(findCategory);
         DeleteCategoryResponse response = CategoryMapper.INSTANCE.DeleteToCategoryDto(findCategory);
         return response;
     }
+
+
 }

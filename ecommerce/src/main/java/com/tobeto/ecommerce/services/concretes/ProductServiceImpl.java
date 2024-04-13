@@ -33,6 +33,10 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findById(productId)
                 .orElse(null); // veya exception fırlatılabilir
     }
+
+
+
+
     public Double getProductPrice(int productId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new IllegalArgumentException("Ürün bulunamadı"));
@@ -83,7 +87,10 @@ public class ProductServiceImpl implements ProductService {
         UpdateProductResponse response = ProductMapper.INSTANCE.updateProductResponsetoProduct(updated);
         return response;
     }
-
+    @Override
+    public List<GetAllTopSellingProductResponse> search(String productName, int salesCount) {
+        return productRepository.search(productName,salesCount);
+    }
     public List<GetAllProductCustomerResponse> search(String productName, Double minPrice, Double maxPrice, String categoryName) {
         return productRepository.search(productName,minPrice,maxPrice,categoryName);
     }
