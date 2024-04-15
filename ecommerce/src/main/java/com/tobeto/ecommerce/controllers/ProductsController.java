@@ -1,5 +1,6 @@
 package com.tobeto.ecommerce.controllers;
 
+import com.tobeto.ecommerce.entities.Product;
 import com.tobeto.ecommerce.services.abstracts.ProductService;
 import com.tobeto.ecommerce.services.dtos.requests.product.AddProductRequest;
 import com.tobeto.ecommerce.services.dtos.requests.product.DeleteProductRequest;
@@ -50,12 +51,16 @@ public class ProductsController {
     public List<GetAllProductAdminResponse> search(@RequestParam(required = false) String productName, @RequestParam(required = false) String categoryName){
         return productService.search(productName,categoryName);
     }
-    @GetMapping("/getLastAddedProduct")
+    @GetMapping("/getLastAdded")
     @ResponseStatus(HttpStatus.OK)
     public List<GetLastAddedProductResponse> getLastAddedProduct(){
         return productService.getLastAddedProduct();
     }
-
+    @GetMapping("/topSeller")
+    @ResponseStatus(HttpStatus.OK)
+    public List<GetTopSellerProductResponse> topSellerProducts(){
+        return productService.topSellerProducts();
+    }
     @GetMapping("/getById")
     @ResponseStatus(HttpStatus.OK)
     public GetByIdProductResponse getById(GetByIdProductRequest request){

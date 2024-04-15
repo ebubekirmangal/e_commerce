@@ -29,4 +29,5 @@ public interface ProductService {
     List<GetLastAddedProductResponse>getLastAddedProduct();
     Double getProductPrice(int productId);
     Product getProductById(int productId);
+    List<GetTopSellerProductResponse> topSellerProducts();
 }

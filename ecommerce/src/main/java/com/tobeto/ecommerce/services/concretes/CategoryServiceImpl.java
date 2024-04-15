@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -26,6 +27,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public AddCategoryResponse add(AddCategoryRequest request) {
+        categoryNameEnteredMustNotBeSameDb(request.getName());
         Category category = CategoryMapper.INSTANCE.categoryFromAddRequest(request);
 
         // Eğer parentCategoryId 0 ise, en üst düzey kategori olarak kabul edilir
@@ -78,5 +80,12 @@ public class CategoryServiceImpl implements CategoryService {
         categoryRepository.delete(findCategory);
         DeleteCategoryResponse response = CategoryMapper.INSTANCE.DeleteToCategoryDto(findCategory);
         return response;
+    }
+
+    private void categoryNameEnteredMustNotBeSameDb(String categoryName){
+        Optional<Category> categoryNameFilter = categoryRepository.findByNameIgnoreCase(categoryName);
+        if(categoryNameFilter.isPresent()){
+            new BusinessException("Aynı isim kategori zaten bulunuyor.");
+        }
     }
 }

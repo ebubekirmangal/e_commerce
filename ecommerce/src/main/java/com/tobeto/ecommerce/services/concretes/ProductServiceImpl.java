@@ -33,6 +33,9 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findById(productId)
                 .orElse(null); // veya exception fırlatılabilir
     }
+
+
+
     public Double getProductPrice(int productId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new IllegalArgumentException("Ürün bulunamadı"));
@@ -95,14 +98,24 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<GetLastAddedProductResponse> getLastAddedProduct() {
         List<Product> products = productRepository.findTop5ByOrderByIdDesc();
-        List<GetLastAddedProductResponse> lastAddedProductResponses = new ArrayList<>();
+        List<GetLastAddedProductResponse> result = new ArrayList<>();
         for (Product product:products){
             GetLastAddedProductResponse dto = ProductMapper.INSTANCE.toLastAddedProductResponse(product);
-            lastAddedProductResponses.add(dto);
+            result.add(dto);
         }
-        return lastAddedProductResponses;
+        return result;
     }
-
+    @Override
+    public List<GetTopSellerProductResponse> topSellerProducts() {
+        List<GetSellerTopFiveResponse> products = productRepository.findTop5ProductsByTotalQuantity();
+        List<GetTopSellerProductResponse> result = new ArrayList<>();
+        for(GetSellerTopFiveResponse product:products){
+            GetTopSellerProductResponse dto = ProductMapper.INSTANCE.toGetTopSellerProductResponse(product);
+            result.add(dto);
+        }
+        return result;
+        //TODO: Db sana değeri object olarak dönüyor seninde öyle döndürmen lazım sonra halledersin.
+    }
 
     public GetByIdProductResponse getById(GetByIdProductRequest request){
         int productId = request.getId();

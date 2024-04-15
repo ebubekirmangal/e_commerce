@@ -17,6 +17,9 @@ public interface ProductMapper {
     AddProductResponse toProductAddResponse(Product response);
     @Mapping(target = "categoryName",source = "category.name")
     GetLastAddedProductResponse toLastAddedProductResponse(Product response);
+
+    @Mapping(target = "id",source = "product.id")
+    GetTopSellerProductResponse toGetTopSellerProductResponse(GetSellerTopFiveResponse response);
     @Mapping(target = "categoryName",source = "category.name")
     GetByIdProductResponse toProductGetByIdResponse(Product response);
     @Mapping(target = "category.id",source = "categoryId")
