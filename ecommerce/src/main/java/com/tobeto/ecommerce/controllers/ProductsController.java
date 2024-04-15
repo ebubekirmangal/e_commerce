@@ -50,6 +50,13 @@ public class ProductsController {
     public List<GetAllProductAdminResponse> search(@RequestParam(required = false) String productName, @RequestParam(required = false) String categoryName){
         return productService.search(productName,categoryName);
     }
+    @GetMapping("/getAllTopSellingProduct")
+    @ResponseStatus(HttpStatus.OK)
+    public List<GetAllTopSellingProductResponse> search(@RequestParam(required = false) String productName,@RequestParam(required = false) int salesCount){
+        return productService.search(productName,salesCount);
+    }
+
+
     @GetMapping("/getLastAddedProduct")
     @ResponseStatus(HttpStatus.OK)
     public List<GetLastAddedProductResponse> getLastAddedProduct(){

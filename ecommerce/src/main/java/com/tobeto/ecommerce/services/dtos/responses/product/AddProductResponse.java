@@ -22,4 +22,7 @@ public class AddProductResponse {
     private int stockAmount;
 
     private String categoryName;
+
+    private int salesCount;
+
 }

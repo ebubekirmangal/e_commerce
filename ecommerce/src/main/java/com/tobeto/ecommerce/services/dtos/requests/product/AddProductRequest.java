@@ -25,6 +25,9 @@ public class AddProductRequest {
 
     private int categoryId;
 
+    private int salesCount;
+
+
 
 
 }

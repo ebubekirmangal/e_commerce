@@ -30,7 +30,7 @@ public interface ProductRepository extends JpaRepository<Product,Integer> {
     List<Product> findTop5ByOrderByIdDesc();
 
     @Query("SELECT new com.tobeto.ecommerce.services.dtos.responses.product.GetAllTopSellingProductResponse(p.id,p.name,p.salesCount,p.category.name)" +
-            " FROM Product p" +
-            "ORDER BY (p.salesCount DESC")
+            " FROM Product p " +
+            "ORDER BY (p.salesCount) DESC")
     List<GetAllTopSellingProductResponse> search(String productName, int salesCount);
 }
