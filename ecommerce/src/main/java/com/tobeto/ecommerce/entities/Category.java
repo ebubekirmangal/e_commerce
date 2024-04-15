@@ -1,6 +1,7 @@
 package com.tobeto.ecommerce.entities;
 
 import jakarta.persistence.*;
+import jdk.jfr.Enabled;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,7 @@ import java.util.List;
 public class Category {
 
     public Category(List<Product> products) {
+
         this.products = products;
     }
 
@@ -28,6 +30,9 @@ public class Category {
 
     @Column(name = "is_active")
     private Boolean isActive;
+
+//    @Column(name = "user_id")
+//    private int userId;
 
     @OneToMany(mappedBy = "category")
     private List<Product> products;

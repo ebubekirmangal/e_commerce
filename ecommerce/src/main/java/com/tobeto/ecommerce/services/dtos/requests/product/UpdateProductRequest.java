@@ -11,6 +11,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class UpdateProductRequest {
 
+//    private int userId;
+
     private int id;
 
     private String name;

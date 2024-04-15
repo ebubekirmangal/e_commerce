@@ -5,15 +5,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AddOrderRequest {
-    private int userId;
-    private LocalDateTime orderDate;
-    private List<OrderProductRequest> orderProductRequest;
+public class GetByIdOrderProductRequest {
+    private int id;
 }

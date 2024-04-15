@@ -8,6 +8,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
+import java.util.List;
+
 @Mapper
 public interface ProductMapper {
     ProductMapper INSTANCE = Mappers.getMapper(ProductMapper.class);
@@ -17,9 +19,10 @@ public interface ProductMapper {
     AddProductResponse toProductAddResponse(Product response);
     @Mapping(target = "categoryName",source = "category.name")
     GetLastAddedProductResponse toLastAddedProductResponse(Product response);
-
-    @Mapping(target = "id",source = "product.id")
+    @Mapping(target = "id", source = "productId")
     GetTopSellerProductResponse toGetTopSellerProductResponse(GetSellerTopFiveResponse response);
+    @Mapping(target = "productId", source = "id")
+    List<GetTopSellerProductResponse> toGetTopSellerProductResponseList(List<GetSellerTopFiveResponse> responses);
     @Mapping(target = "categoryName",source = "category.name")
     GetByIdProductResponse toProductGetByIdResponse(Product response);
     @Mapping(target = "category.id",source = "categoryId")

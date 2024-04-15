@@ -20,4 +20,6 @@ public class GetTopSellerProductResponse {
     private double unitPrice;
 
     private String categoryName;
+
+    private int totalQuantity;
 }

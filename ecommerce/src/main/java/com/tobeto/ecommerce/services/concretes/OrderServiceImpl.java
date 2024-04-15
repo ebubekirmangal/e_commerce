@@ -1,5 +1,6 @@
 package com.tobeto.ecommerce.services.concretes;
 
+import com.tobeto.ecommerce.core.utils.exceptions.types.BusinessException;
 import com.tobeto.ecommerce.entities.Order;
 import com.tobeto.ecommerce.entities.OrderProduct;
 import com.tobeto.ecommerce.entities.Product;
@@ -8,9 +9,11 @@ import com.tobeto.ecommerce.repositories.OrderRepository;
 import com.tobeto.ecommerce.services.abstracts.OrderService;
 import com.tobeto.ecommerce.services.abstracts.ProductService;
 import com.tobeto.ecommerce.services.dtos.requests.order.AddOrderRequest;
+import com.tobeto.ecommerce.services.dtos.requests.order.GetByIdOrderProductRequest;
 import com.tobeto.ecommerce.services.dtos.requests.order.OrderProductRequest;
 import com.tobeto.ecommerce.services.dtos.responses.order.GetAllOrderProductResponse;
 import com.tobeto.ecommerce.services.dtos.responses.order.AddOrderResponse;
+import com.tobeto.ecommerce.services.dtos.responses.order.GetByIdOrderProductResponse;
 import com.tobeto.ecommerce.services.mapper.OrderMapper;
 import com.tobeto.ecommerce.services.mapper.OrderProductMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,4 +83,11 @@ public class OrderServiceImpl implements OrderService {
 
         return result;
     }
+//    public List<GetByIdOrderProductResponse> getById(GetByIdOrderProductRequest request) {
+//        List<Order> orders = orderRepository.findById(request.getId())
+//                .orElseThrow(()-> new BusinessException("id bulunamadı."));
+//       OrderProduct findId =
+//       GetByIdOrderProductResponse response = OrderProductMapper.INSTANCE.orderProductToGetByIdResponse(findId);
+//        return null;
+//    }
 }

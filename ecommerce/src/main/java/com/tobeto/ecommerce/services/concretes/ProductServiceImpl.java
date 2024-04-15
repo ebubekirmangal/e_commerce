@@ -3,8 +3,11 @@ package com.tobeto.ecommerce.services.concretes;
 import com.tobeto.ecommerce.core.utils.exceptions.types.BusinessException;
 import com.tobeto.ecommerce.entities.Category;
 import com.tobeto.ecommerce.entities.Product;
+import com.tobeto.ecommerce.entities.User;
+import com.tobeto.ecommerce.entities.UserType;
 import com.tobeto.ecommerce.repositories.CategoryRepository;
 import com.tobeto.ecommerce.repositories.ProductRepository;
+import com.tobeto.ecommerce.repositories.UserRepository;
 import com.tobeto.ecommerce.services.abstracts.ProductService;
 import com.tobeto.ecommerce.services.dtos.requests.order.OrderProductRequest;
 import com.tobeto.ecommerce.services.dtos.requests.product.AddProductRequest;
@@ -12,6 +15,7 @@ import com.tobeto.ecommerce.services.dtos.requests.product.DeleteProductRequest;
 import com.tobeto.ecommerce.services.dtos.requests.product.GetByIdProductRequest;
 import com.tobeto.ecommerce.services.dtos.requests.product.UpdateProductRequest;
 import com.tobeto.ecommerce.services.dtos.responses.product.*;
+import com.tobeto.ecommerce.services.dtos.responses.user.GetAllUserId;
 import com.tobeto.ecommerce.services.mapper.ProductMapper;
 import org.springframework.stereotype.Service;
 
@@ -25,15 +29,25 @@ public class ProductServiceImpl implements ProductService {
 
     private CategoryRepository categoryRepository;
 
-    public ProductServiceImpl(ProductRepository productRepository, CategoryRepository categoryRepository) {
+    private UserRepository userRepository;
+
+    public ProductServiceImpl(ProductRepository productRepository, CategoryRepository categoryRepository, UserRepository userRepository) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
+        this.userRepository = userRepository;
     }
+
     public Product getProductById(int productId) {
         return productRepository.findById(productId)
                 .orElse(null); // veya exception fırlatılabilir
     }
 
+    @Override
+    public List<GetTopSellerProductResponse> topSellerProducts() {
+        List<GetSellerTopFiveResponse> topFiveResponses = productRepository.findTop5ProductsByTotalQuantity();
+        List<GetTopSellerProductResponse> responses = ProductMapper.INSTANCE.toGetTopSellerProductResponseList(topFiveResponses);
+        return responses;
+    }
 
 
     public Double getProductPrice(int productId) {
@@ -45,32 +59,38 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public AddProductResponse add(AddProductRequest newProduct) {
         nameShouldNotBeSameProductName(newProduct.getName());
+//        isAdminDoingAction(newProduct.getUserId());
 
-        // AddProductRequest'ten Product'a dönüştürme
         Product product = ProductMapper.INSTANCE.productFromAddRequest(newProduct);
 
-        // Yeni ürünün kategorisini alın
+
         int categoryId = newProduct.getCategoryId();
         Category category = categoryRepository.findById(categoryId).orElse(null);
         if (category == null) {
-            // Belirtilen kategori bulunamadı
-            throw new BusinessException("Category with id " + categoryId + " not found");
+
+            throw new BusinessException("Belirtilen categoryId '" + categoryId + "' bulunamadı.");
         }
 
-        // Ürüne kategoriyi atama
+
         product.setCategory(category);
 
-        // Ürünü kaydetme
+
         Product savedProduct = productRepository.save(product);
 
-        // Kaydedilen ürünü AddProductResponse'ya dönüştürme
+
         AddProductResponse getResponse = ProductMapper.INSTANCE.toProductAddResponse(savedProduct);
+        // ürün stoğu yoksa ürün satışa aktif değil
+        if(product.getStockAmount() == 0){
+            getResponse.setIsActive(Boolean.valueOf("false"));
+            ;}
+        getResponse.setIsActive(Boolean.valueOf("true"));
 
         return getResponse;
     }
 
     @Override
     public DeleteProductResponse delete(DeleteProductRequest request) {
+        isAdminDoingAction(request.getUserId());
         Product product = productRepository.findById(request.getId()).orElseThrow(() -> new BusinessException("id bulunamadı"));
         productRepository.delete(product);
         DeleteProductResponse productDeleteResponse = new DeleteProductResponse(product.getId(), product.getName(), product.getDescription(), product.getUnitPrice(), product.getStockAmount(),product.getCategory().getName());
@@ -79,6 +99,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public UpdateProductResponse update(UpdateProductRequest request) {
+//        isAdminDoingAction(request.getUserId());
+
         Product product = ProductMapper.INSTANCE.productFromUpdateProductRequest(request);
 
         Product updated = productRepository.save(product);
@@ -104,17 +126,6 @@ public class ProductServiceImpl implements ProductService {
             result.add(dto);
         }
         return result;
-    }
-    @Override
-    public List<GetTopSellerProductResponse> topSellerProducts() {
-        List<GetSellerTopFiveResponse> products = productRepository.findTop5ProductsByTotalQuantity();
-        List<GetTopSellerProductResponse> result = new ArrayList<>();
-        for(GetSellerTopFiveResponse product:products){
-            GetTopSellerProductResponse dto = ProductMapper.INSTANCE.toGetTopSellerProductResponse(product);
-            result.add(dto);
-        }
-        return result;
-        //TODO: Db sana değeri object olarak dönüyor seninde öyle döndürmen lazım sonra halledersin.
     }
 
     public GetByIdProductResponse getById(GetByIdProductRequest request){
@@ -160,6 +171,15 @@ public class ProductServiceImpl implements ProductService {
 
         product.setStockAmount(updatedStock);
         productRepository.save(product);
+    }
+    public void isAdminDoingAction(int userId) {
+
+        List<GetAllUserId>  ids = userRepository.findAllUserIds();
+
+        if (!ids.contains(userId)) {
+            throw new BusinessException("Yönetici iznine sahip değilsiniz.");
+        }
+
     }
 
 }

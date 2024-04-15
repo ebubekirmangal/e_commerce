@@ -11,6 +11,8 @@ import lombok.Setter;
 @NoArgsConstructor
 public class UpdateCategoryRequest {
 
+//    private int userId;
+
     private int id;
 
     private String name;

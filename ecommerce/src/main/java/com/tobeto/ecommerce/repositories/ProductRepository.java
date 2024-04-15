@@ -4,6 +4,7 @@ import com.tobeto.ecommerce.entities.Product;
 import com.tobeto.ecommerce.services.dtos.responses.product.GetAllProductAdminResponse;
 import com.tobeto.ecommerce.services.dtos.responses.product.GetAllProductCustomerResponse;
 import com.tobeto.ecommerce.services.dtos.responses.product.GetSellerTopFiveResponse;
+import com.tobeto.ecommerce.services.dtos.responses.user.GetAllUserId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -28,9 +29,12 @@ public interface ProductRepository extends JpaRepository<Product,Integer> {
     List<GetAllProductAdminResponse> search(String productName, String categoryName);
 
     List<Product> findTop5ByOrderByIdDesc();
-    @Query("SELECT new com.tobeto.ecommerce.services.dtos.responses.product.GetSellerTopFiveResponse(op.product.id, SUM(op.quantity) AS total )" +
+    @Query("SELECT new com.tobeto.ecommerce.services.dtos.responses.product.GetSellerTopFiveResponse( p.id, p.name, p.description, p.unitPrice, c.name AS categoryName, SUM(op.quantity) AS totalQuantity) " +
             "FROM OrderProduct op " +
-            "GROUP BY op.product.id " +
-            "ORDER BY total DESC")
+            "JOIN op.product p " +
+            "JOIN p.category c " +
+            "GROUP BY p.id, p.name, p.description, p.unitPrice, c.name " +
+            "ORDER BY SUM(op.quantity) DESC")
     List<GetSellerTopFiveResponse> findTop5ProductsByTotalQuantity();
+
 }

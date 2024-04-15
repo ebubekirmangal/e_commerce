@@ -21,5 +21,7 @@ public class AddProductResponse {
 
     private int stockAmount;
 
+    private Boolean isActive;
+
     private String categoryName;
 }

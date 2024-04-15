@@ -29,6 +29,12 @@ public class Product {
     @Column(name = "stock_amount")
     private int stockAmount;
 
+    @Column(name = "is_active")
+    private Boolean isActive;
+
+//    @Column(name = "user_id",)
+//    private int userId;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;

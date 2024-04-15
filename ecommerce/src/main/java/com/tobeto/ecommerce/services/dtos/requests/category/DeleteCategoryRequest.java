@@ -11,5 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class DeleteCategoryRequest {
 
+//    private int userId;
+
     private int id;
 }

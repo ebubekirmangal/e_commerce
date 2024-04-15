@@ -41,12 +41,12 @@ public class ProductsController {
     public DeleteProductResponse delete(DeleteProductRequest request){
         return productService.delete(request);
     }
-    @GetMapping("/getAllForCustomer")
+    @GetMapping("/getAllWithFilterForCustomer")
     @ResponseStatus(HttpStatus.OK)
     public List<GetAllProductCustomerResponse> search(@RequestParam(required = false) String productName, @RequestParam(required = false) Double minPrice, @RequestParam(required = false) Double maxPrice, @RequestParam(required = false) String categoryName){
         return productService.search(productName, minPrice,maxPrice,categoryName);
     }
-    @GetMapping("/getAllForAdmin")
+    @GetMapping("/getAllWithFilterForAdmin")
     @ResponseStatus(HttpStatus.OK)
     public List<GetAllProductAdminResponse> search(@RequestParam(required = false) String productName, @RequestParam(required = false) String categoryName){
         return productService.search(productName,categoryName);

@@ -2,13 +2,17 @@ package com.tobeto.ecommerce.services.concretes;
 
 import com.tobeto.ecommerce.core.utils.exceptions.types.BusinessException;
 import com.tobeto.ecommerce.entities.Category;
+import com.tobeto.ecommerce.entities.User;
+import com.tobeto.ecommerce.entities.UserType;
 import com.tobeto.ecommerce.repositories.CategoryRepository;
+import com.tobeto.ecommerce.repositories.UserRepository;
 import com.tobeto.ecommerce.services.abstracts.CategoryService;
 import com.tobeto.ecommerce.services.dtos.requests.category.AddCategoryRequest;
 import com.tobeto.ecommerce.services.dtos.requests.category.DeleteCategoryRequest;
 import com.tobeto.ecommerce.services.dtos.requests.category.GetByIdCategoryRequest;
 import com.tobeto.ecommerce.services.dtos.requests.category.UpdateCategoryRequest;
 import com.tobeto.ecommerce.services.dtos.responses.category.*;
+import com.tobeto.ecommerce.services.dtos.responses.user.GetAllUserId;
 import com.tobeto.ecommerce.services.mapper.CategoryMapper;
 import org.springframework.stereotype.Service;
 
@@ -21,20 +25,24 @@ public class CategoryServiceImpl implements CategoryService {
 
     private CategoryRepository categoryRepository;
 
-    public CategoryServiceImpl(CategoryRepository categoryRepository) {
+    private UserRepository userRepository;
+
+    public CategoryServiceImpl(CategoryRepository categoryRepository, UserRepository userRepository) {
         this.categoryRepository = categoryRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
     public AddCategoryResponse add(AddCategoryRequest request) {
         categoryNameEnteredMustNotBeSameDb(request.getName());
+//        isAdminDoingAction(request.getUserId());
         Category category = CategoryMapper.INSTANCE.categoryFromAddRequest(request);
 
-        // Eğer parentCategoryId 0 ise, en üst düzey kategori olarak kabul edilir
+
         if (request.getParentCategoryId() != 0) {
-            // Parent kategori belirtilmişse, veritabanından bu kategoriyi alıyoruz
+
             Category parentCategory = categoryRepository.findById(request.getParentCategoryId())
-                    .orElseThrow(() -> new IllegalArgumentException("Parent category with id " + request.getParentCategoryId() + " not found"));
+                    .orElseThrow(() -> new BusinessException("Belirtilen parentCategoryId '" + request.getParentCategoryId() + "' bulunamadı."));
             category.setParentCategory(parentCategory);
         }
 
@@ -47,6 +55,8 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public UpdateCategoryResponse update(UpdateCategoryRequest request) {
+        categoryNameEnteredMustNotBeSameDb(request.getName());
+//        isAdminDoingAction(request.getUserId());
         Category category = CategoryMapper.INSTANCE.categoryFromUpdateRequest(request);
         Category updated = categoryRepository.save(category);
 
@@ -75,7 +85,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public DeleteCategoryResponse delete(DeleteCategoryRequest request) {
-
+//        isAdminDoingAction(request.getUserId());
         Category findCategory =  categoryRepository.findById(request.getId()).orElseThrow(()-> new BusinessException("Verilen id'de Categori bulunmuyor."));
         categoryRepository.delete(findCategory);
         DeleteCategoryResponse response = CategoryMapper.INSTANCE.DeleteToCategoryDto(findCategory);
@@ -88,4 +98,14 @@ public class CategoryServiceImpl implements CategoryService {
             new BusinessException("Aynı isim kategori zaten bulunuyor.");
         }
     }
+    public void isAdminDoingAction(int userId) {
+
+        List<GetAllUserId>  ids = userRepository.findAllUserIds();
+
+        if (!ids.contains(userId)) {
+            throw new BusinessException("Yönetici iznine sahip değilsiniz.");
+        }
+
+    }
+
 }

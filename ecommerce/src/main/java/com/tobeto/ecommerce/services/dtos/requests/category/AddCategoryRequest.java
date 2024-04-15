@@ -11,6 +11,8 @@ import lombok.Setter;
 @NoArgsConstructor
 public class AddCategoryRequest {
 
+//    private int userId;
+
     private String name;
 
     private Boolean isActive;
